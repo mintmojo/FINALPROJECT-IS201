@@ -1,0 +1,25 @@
+/* At least four style definitions (it is possible you will have many more than four styles)
+Styles that specify font color (h1)
+Styles that specify font family (h1)
+At least three divs for positioning and styling blocks of content in the HTML page
+  !!!the 3rd div in gamechoosescreen.css!!!
+*/
+
+body {
+    background-color: rgb(9, 100, 8);
+}
+
+h1 {
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+.notlist {
+    text-align: center;
+}
+
+.footer {
+    text-align: center;
+    background-color: white;
+}  

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PONG — PHOSPHOR EDITION</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --p: #00FF41; --pd: #00C832; --pdim: #004d13; --bg: #000; }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'VT323', monospace;
+    color: var(--p);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .crt-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .crt-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom, transparent 0px, transparent 3px,
+      rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  h1 {
+    font-size: 3.2rem;
+    letter-spacing: 0.4em;
+    text-shadow: 0 0 8px var(--p), 0 0 20px var(--pd);
+    margin-bottom: 0.2rem;
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    letter-spacing: 0.25em;
+    color: var(--pd);
+    text-shadow: 0 0 6px var(--pd);
+    margin-bottom: 1rem;
+  }
+
+  #scoreBoard {
+    display: flex;
+    gap: 4rem;
+    font-size: 2.4rem;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 8px var(--p);
+    margin-bottom: 0.5rem;
+  }
+
+  .score-label {
+    font-size: 1rem;
+    color: var(--pd);
+    text-align: center;
+    display: block;
+    letter-spacing: 0.2em;
+  }
+
+  #gameCanvas {
+    border: 2px solid var(--p);
+    box-shadow: 0 0 10px var(--p), 0 0 30px var(--pdim), inset 0 0 60px rgba(0,255,65,0.03);
+    display: block;
+    background: #000;
+  }
+
+  #ui {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    background: rgba(0,0,0,0.85);
+  }
+
+  #ui h2 {
+    font-size: 2.5rem;
+    letter-spacing: 0.3em;
+    text-shadow: 0 0 10px var(--p), 0 0 30px var(--pd);
+    margin-bottom: 0.5rem;
+  }
+
+  #ui p {
+    font-size: 1.3rem;
+    color: var(--pd);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .diff-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .diff-btn {
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+    background: transparent;
+    border: 2px solid var(--pd);
+    color: var(--pd);
+    padding: 0.35rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, box-shadow 0.1s;
+    text-shadow: 0 0 4px var(--pd);
+  }
+
+  .diff-btn:hover, .diff-btn.active {
+    background: var(--pd);
+    color: #000;
+    box-shadow: 0 0 12px var(--pd);
+    text-shadow: none;
+  }
+
+  .start-btn {
+    font-family: 'VT323', monospace;
+    font-size: 1.8rem;
+    letter-spacing: 0.25em;
+    background: transparent;
+    border: 2px solid var(--p);
+    color: var(--p);
+    padding: 0.4rem 2rem;
+    cursor: pointer;
+    text-shadow: 0 0 8px var(--p);
+    box-shadow: 0 0 8px var(--pdim);
+    animation: blink 1.1s step-end infinite;
+    margin-bottom: 1rem;
+  }
+
+  .start-btn:hover {
+    background: var(--p);
+    color: #000;
+    text-shadow: none;
+    animation: none;
+    box-shadow: 0 0 18px var(--p);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  .menu-hint {
+    font-size: 1rem;
+    color: var(--pdim);
+    letter-spacing: 0.12em;
+    margin-top: 0.3rem;
+  }
+
+  .controls-hint {
+    position: relative;
+    margin-top: 0.8rem;
+    font-size: 1rem;
+    color: var(--pdim);
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  #menuBtn {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    background: transparent;
+    border: 1px solid var(--pdim);
+    color: var(--pdim);
+    cursor: pointer;
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+    z-index: 30;
+  }
+  #menuBtn:hover { border-color: var(--p); color: var(--p); }
+
+  #muteBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    background: transparent;
+    border: 1px solid var(--pdim);
+    color: var(--pdim);
+    cursor: pointer;
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+    z-index: 30;
+  }
+  #muteBtn:hover { border-color: var(--p); color: var(--p); }
+</style>
+</head>
+<body>
+
+<div class="crt-wrap">
+  <h1>PONG</h1>
+  <p class="subtitle">&mdash;1982 EDITION&mdash;</p>
+
+  <div id="scoreBoard">
+    <div>
+      <span class="score-label">CPU</span>
+      <span id="cScore">00</span>
+    </div>
+    <div>
+      <span class="score-label">PLAYER</span>
+      <span id="pScore">00</span>
+    </div>
+  </div>
+
+  <div style="position:relative;">
+    <canvas id="gameCanvas" width="800" height="480"></canvas>
+
+    <div id="ui">
+      <h2 id="uiTitle">PONG</h2>
+      <p id="uiMsg">SELECT DIFFICULTY<br>FIRST TO 10 WINS</p>
+      <div class="diff-row" id="diffRow">
+        <button class="diff-btn active" id="btnEasy"   onclick="setDiff('easy')">EASY</button>
+        <button class="diff-btn"        id="btnMedium" onclick="setDiff('medium')">MEDIUM</button>
+        <button class="diff-btn"        id="btnHard"   onclick="setDiff('hard')">HARD</button>
+      </div>
+      <button class="start-btn" id="startBtn" onclick="startGame()">[ INSERT COIN ]</button>
+      <p class="menu-hint" id="menuHint"></p>
+    </div>
+
+    <button id="menuBtn" onclick="goToMenu()" title="Menu (ESC)">MENU</button>
+    <button id="muteBtn" onclick="toggleMute()">SFX: ON</button>
+  </div>
+
+  <p class="controls-hint">W / S &nbsp;&bull;&nbsp; UP / DOWN &nbsp;&bull;&nbsp; MOUSE &nbsp;&bull;&nbsp; ESC = MENU</p>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const GREEN = '#00FF41', DKGREEN = '#00C832', DIMGREEN = '#004d13';
+const PAD_W = 12, PAD_H = 80, BALL_R = 7;
+const WIN_SCORE = 10;
+
+let diff = 'easy';
+let gameState = 'menu';
+let muted = false;
+let animId;
+
+const diffSettings = {
+  easy:   { speed: 5.5, aiSpeed: 3.2, predict: 0.25 },
+  medium: { speed: 7,   aiSpeed: 4.8, predict: 0.55 },
+  hard:   { speed: 9,   aiSpeed: 7.2, predict: 0.92 }
+};
+
+// Player = RIGHT paddle, CPU = LEFT paddle
+let player, cpu, ball, pScore, cScore;
+let keys = {};
+let mouseY = H / 2;
+let mouseActive = false;
+
+function initObjects() {
+  player = { x: W - 20 - PAD_W, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
+  cpu    = { x: 20,              y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
+  pScore = 0; cScore = 0;
+  updateScoreDisplay();
+  resetBall(-1); // start going left toward CPU so player sees the ball coming
+}
+
+function resetBall(dir) {
+  const ds = diffSettings[diff];
+  const angle = (Math.random() * 0.5 + 0.2) * (Math.random() < 0.5 ? 1 : -1);
+  ball = {
+    x: W/2, y: H/2,
+    r: BALL_R,
+    vx: ds.speed * dir * Math.cos(angle),
+    vy: ds.speed * Math.sin(angle)
+  };
+}
+
+function setDiff(d) {
+  diff = d;
+  ['easy','medium','hard'].forEach(k => {
+    document.getElementById('btn' + k.charAt(0).toUpperCase() + k.slice(1))
+      .classList.toggle('active', k === d);
+  });
+}
+
+function startGame() {
+  document.getElementById('ui').style.display = 'none';
+  initObjects();
+  gameState = 'playing';
+  if (animId) cancelAnimationFrame(animId);
+  loop();
+}
+
+function goToMenu() {
+  if (animId) cancelAnimationFrame(animId);
+  gameState = 'menu';
+  showMenu('PONG', 'SELECT DIFFICULTY<br>FIRST TO 10 WINS', true, false);
+}
+
+function showMenu(title, msg, showDiff, isReplay) {
+  const ui = document.getElementById('ui');
+  ui.style.display = 'flex';
+  document.getElementById('uiTitle').textContent = title;
+  document.getElementById('uiMsg').innerHTML = msg;
+  document.getElementById('diffRow').style.display = showDiff ? 'flex' : 'none';
+  document.getElementById('startBtn').textContent = isReplay ? '[ PLAY AGAIN ]' : '[ INSERT COIN ]';
+  document.getElementById('menuHint').textContent = isReplay ? 'OR PRESS ESC TO CHANGE DIFFICULTY' : '';
+}
+
+function loop() {
+  update();
+  draw();
+  animId = requestAnimationFrame(loop);
+}
+
+function update() {
+  if (gameState !== 'playing') return;
+  const ds = diffSettings[diff];
+  const PSPEED = 7;
+
+  // Player (right paddle) — keyboard + mouse
+  if (keys['KeyW'] || keys['ArrowUp'])   player.y -= PSPEED;
+  if (keys['KeyS'] || keys['ArrowDown']) player.y += PSPEED;
+  if (mouseActive) {
+    player.y += (mouseY - player.h / 2 - player.y) * 0.18;
+  }
+  player.y = Math.max(0, Math.min(H - PAD_H, player.y));
+
+  // CPU (left paddle) — AI prediction
+  const targetY = predictBallY(ds.predict);
+  const cpuCenter = cpu.y + PAD_H / 2;
+  const delta = targetY - cpuCenter;
+  cpu.y += Math.sign(delta) * Math.min(Math.abs(delta), ds.aiSpeed);
+  cpu.y = Math.max(0, Math.min(H - PAD_H, cpu.y));
+
+  // Move ball
+  ball.x += ball.vx;
+  ball.y += ball.vy;
+
+  // Top / bottom walls
+  if (ball.y - BALL_R <= 0) { ball.y = BALL_R; ball.vy *= -1; beep(440, 0.06, 'square'); }
+  if (ball.y + BALL_R >= H) { ball.y = H - BALL_R; ball.vy *= -1; beep(440, 0.06, 'square'); }
+
+  // CPU paddle (left) collision — ball moving left
+  if (ball.vx < 0
+      && ball.x - BALL_R <= cpu.x + PAD_W
+      && ball.x - BALL_R >= cpu.x
+      && ball.y >= cpu.y - BALL_R && ball.y <= cpu.y + PAD_H + BALL_R) {
+    ball.x = cpu.x + PAD_W + BALL_R;
+    bouncePaddle(cpu);
+    beep(260, 0.09, 'square');
+  }
+
+  // Player paddle (right) collision — ball moving right
+  if (ball.vx > 0
+      && ball.x + BALL_R >= player.x
+      && ball.x + BALL_R <= player.x + PAD_W
+      && ball.y >= player.y - BALL_R && ball.y <= player.y + PAD_H + BALL_R) {
+    ball.x = player.x - BALL_R;
+    bouncePaddle(player);
+    beep(330, 0.09, 'square');
+  }
+
+  // Ball exits LEFT → player scores (CPU missed)
+  if (ball.x < 0) {
+    pScore++;
+    updateScoreDisplay();
+    beep(523, 0.25, 'sine');
+    if (pScore >= WIN_SCORE) { endGame(true); return; }
+    resetBall(-1); // next serve toward CPU
+  }
+
+  // Ball exits RIGHT → CPU scores (player missed)
+  if (ball.x > W) {
+    cScore++;
+    updateScoreDisplay();
+    beep(150, 0.25, 'sawtooth');
+    if (cScore >= WIN_SCORE) { endGame(false); return; }
+    resetBall(1); // next serve toward player
+  }
+}
+
+function bouncePaddle(pad) {
+  const relHit = (ball.y - (pad.y + PAD_H / 2)) / (PAD_H / 2);
+  const angle  = relHit * (Math.PI / 4);
+  const spd    = Math.hypot(ball.vx, ball.vy) * 1.035;
+  ball.vx = (ball.vx > 0 ? -1 : 1) * spd * Math.cos(angle);
+  ball.vy = spd * Math.sin(angle);
+  const maxSpd = diffSettings[diff].speed * 2;
+  if (Math.abs(ball.vx) > maxSpd) ball.vx = Math.sign(ball.vx) * maxSpd;
+}
+
+// CPU is on the left — predict where ball will be when it reaches cpu.x + PAD_W
+function predictBallY(accuracy) {
+  if (ball.vx > 0) return H / 2; // ball heading away, drift to center
+  let bx = ball.x, by = ball.y, bvx = ball.vx, bvy = ball.vy, steps = 0;
+  while (bx > cpu.x + PAD_W && steps++ < 600) {
+    bx += bvx; by += bvy;
+    if (by <= 0 || by >= H) bvy *= -1;
+    by = Math.max(0, Math.min(H, by));
+  }
+  return by * accuracy + (H / 2) * (1 - accuracy);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Centre dashed line
+  ctx.setLineDash([8, 10]);
+  ctx.strokeStyle = DIMGREEN;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  drawPad(cpu);
+  drawPad(player);
+  drawBall();
+}
+
+function drawPad(p) {
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = GREEN;
+  ctx.fillStyle = GREEN;
+  ctx.fillRect(p.x, p.y, p.w, p.h);
+  ctx.shadowBlur = 0;
+}
+
+function drawBall() {
+  ctx.shadowBlur = 14;
+  ctx.shadowColor = GREEN;
+  ctx.fillStyle = GREEN;
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+function updateScoreDisplay() {
+  document.getElementById('pScore').textContent = String(pScore).padStart(2, '0');
+  document.getElementById('cScore').textContent = String(cScore).padStart(2, '0');
+}
+
+function endGame(playerWon) {
+  gameState = 'over';
+  cancelAnimationFrame(animId);
+  if (playerWon) {
+    playVictory();
+    showMenu('YOU WIN!', `FINAL SCORE: ${pScore} — ${cScore}<br>WELL PLAYED, HUMAN`, false, true);
+  } else {
+    playDefeat();
+    showMenu('GAME OVER', `FINAL SCORE: ${pScore} — ${cScore}<br>CPU WINS THIS TIME`, false, true);
+  }
+  // After game over, clicking Play Again re-shows diff selector too
+  document.getElementById('startBtn').onclick = () => {
+    showMenu('PONG', 'SELECT DIFFICULTY<br>FIRST TO 10 WINS', true, false);
+    document.getElementById('startBtn').onclick = startGame;
+    document.getElementById('startBtn').textContent = '[ INSERT COIN ]';
+  };
+}
+
+// Controls
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouseY = e.clientY - rect.top;
+  mouseActive = true;
+});
+canvas.addEventListener('mouseleave', () => { mouseActive = false; });
+
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  mouseActive = false;
+  if (['ArrowUp','ArrowDown','Space'].includes(e.key)) e.preventDefault();
+  if (e.code === 'Escape') goToMenu();
+});
+document.addEventListener('keyup', e => { keys[e.code] = false; });
+
+// Audio
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx;
+function getActx() { if (!actx) actx = new AudioCtx(); return actx; }
+
+function beep(freq, dur, type = 'square') {
+  if (muted) return;
+  try {
+    const ac = getActx();
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.18, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+    o.start(ac.currentTime); o.stop(ac.currentTime + dur);
+  } catch(e) {}
+}
+
+function playVictory() {
+  if (muted) return;
+  [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.18, 'square'), i * 130));
+}
+function playDefeat() {
+  if (muted) return;
+  [330, 277, 220, 165].forEach((f, i) => setTimeout(() => beep(f, 0.22, 'sawtooth'), i * 140));
+}
+
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('muteBtn').textContent = 'SFX: ' + (muted ? 'OFF' : 'ON');
+}
+
+// Initial idle draw
+draw();
+</script>
+</body>
+</html>

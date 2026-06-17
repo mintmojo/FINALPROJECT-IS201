@@ -1,0 +1,30 @@
+img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+h1 {
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px 20px;
+}
+
+.button {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 1px 30px;
+}
+
+.button.red {
+    color: red;
+}
+
+.button.blue {
+    color: blue;
+}

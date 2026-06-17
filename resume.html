@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethan Holbrook - Human Resources Professional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0f2818;
+            --primary-darker: #071410;
+            --accent-navy: #4a4f4d;
+            --accent-blue: #000000;
+            --text-light: #f0f0f0;
+            --text-gray: #b0b0b0;
+            --border-color: rgba(91, 140, 201, 0.2);
+            --card-bg: rgba(30, 58, 95, 0.08);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--accent-navy) 100%);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            letter-spacing: 0.05em;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(0deg, var(--primary-dark) 0%, var(--accent-navy) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(91, 140, 201, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border: 2px solid;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: var(--text-grey);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(91, 140, 201, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-blue);
+            color: var(--text-grey);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: transparent;
+            color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(91, 140, 201, 0.2);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.4s; }
+        section:nth-child(4) { animation-delay: 0.6s; }
+        section:nth-child(5) { animation-delay: 0.8s; }
+        section:nth-child(6) { animation-delay: 1s; }
+        section:nth-child(7) { animation-delay: 1.2s; }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            letter-spacing: -0.01em;
+        }
+
+        .section-accent {
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), transparent);
+            margin: 1.5rem 0 2rem 0;
+        }
+
+        /* About Section */
+        #about {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, transparent 100%);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+
+        .about-highlights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .highlight-card {
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-card:hover {
+            border-color: var(--accent-blue);
+            background: rgba(91, 140, 201, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .highlight-card h3 {
+            color: var(--accent-blue);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Experience Section */
+        #experience {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, transparent 100%);
+        }
+
+        .experience-item {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .experience-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .job-company {
+            color: var(--accent-blue);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .job-duration {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .job-description {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .job-bullets {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .job-bullets li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .job-bullets li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        /* Skills Section */
+        #skills {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, transparent 100%);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            border-color: var(--accent-blue);
+            background: rgba(91, 140, 201, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .skill-category h3 {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            color: var(--text-gray);
+            margin-bottom: 0.7rem;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .skill-category li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        /* Projects Section */
+        #projects {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, transparent 100%);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-blue);
+            background: rgba(91, 140, 201, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(91, 140, 201, 0.1);
+        }
+
+        .project-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .project-description {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(91, 140, 201, 0.2);
+            color: var(--accent-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .empty-project {
+            background: var(--card-bg);
+            border: 2px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            text-align: center;
+            color: var(--text-gray);
+        }
+
+        /* Education Section */
+        #education {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, transparent 100%);
+        }
+
+        .education-item {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .education-item:hover {
+            border-color: var(--accent-blue);
+            background: rgba(91, 140, 201, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .education-school {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-degree {
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .education-duration {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-navy) 100%);
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        #contact h2 {
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .contact-method {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-blue);
+        }
+
+        .contact-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-value {
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .contact-value a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-value a:hover {
+            color: var(--text-light);
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-gray);
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem;
+                margin-top: 70px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .job-header {
+                flex-direction: column;
+            }
+
+            .job-duration {
+                margin-top: 0.5rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                gap: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">EH</div>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Ethan Holbrook</h1>
+            <div class="subtitle">Human Resources Professional</div>
+            <p>Building strong organizations through thoughtful people management, cultural awareness, and operational excellence. Currently studying HR Management at BYU.</p>
+            <div class="cta-buttons">
+                <a href="#contact" class="btn btn-primary">Get in Touch</a>
+                <a href="#projects" class="btn btn-secondary">View Projects</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about">
+        <span class="section-accent">About Me</span>
+        <h2>Building Bridges Between People & Process</h2>
+        <div class="section-divider"></div>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <p>I'm passionate about creating work environments where people thrive. With hands-on experience managing teams, coordinating complex operations, and fostering collaborative cultures, I understand what it takes to build organizations from the ground up.</p>
+                <p>My background spans operations, team leadership, and cross-cultural engagement. I bring both strategic thinking and practical execution skills to HR challenges.</p>
+            </div>
+            <div class="about-highlights">
+                <div class="highlight-card">
+                    <h3>💼 Operations</h3>
+                    <p>Experience coordinating teams and managing material resources</p>
+                </div>
+                <div class="highlight-card">
+                    <h3>🌍 Cultural Fluency</h3>
+                    <p>Fluent Spanish speaker with cross-cultural interests</p>
+                </div>
+                <div class="highlight-card">
+                    <h3>📊 Technical Aptitude</h3>
+                    <p>Comfortable with data, systems, and technical tools</p>
+                </div>
+                <div class="highlight-card">
+                    <h3>🎯 Detail-Oriented</h3>
+                    <p>Precision in documentation, tracking, and compliance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience">
+        <span class="section-accent">Professional History</span>
+        <h2>Experience</h2>
+        <div class="section-divider"></div>
+
+        <div class="experience-item">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Delivery Driver</div>
+                    <div class="job-company">Amazon (Trailblazer)</div>
+                </div>
+                <div class="job-duration">April 2026 - Present</div>
+            </div>
+            <div class="job-description">American Fork, Utah</div>
+            <ul class="job-bullets">
+                <li>Deliver packages to residential and commercial locations with precision and professionalism</li>
+                <li>Maintain accurate delivery records while managing multiple stops efficiently</li>
+                <li>Provide responsive customer service while managing time-sensitive packages</li>
+            </ul>
+        </div>
+
+        <div class="experience-item">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Warehouse Forklift Operator</div>
+                    <div class="job-company">BYU Warehouse</div>
+                </div>
+                <div class="job-duration">April 2026 - July 2026</div>
+            </div>
+            <div class="job-description">Provo, Utah</div>
+            <ul class="job-bullets">
+                <li>Operated forklift equipment to transport and organize materials throughout warehouse</li>
+                <li>Ensured accurate inventory tracking and proper material placement</li>
+                <li>Maintained organized warehouse systems and coordinated with team members to meet delivery schedules</li>
+            </ul>
+        </div>
+
+        <div class="experience-item">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Assistant Manager</div>
+                    <div class="job-company">Earth Born</div>
+                </div>
+                <div class="job-duration">July 2019 - July 2023</div>
+            </div>
+            <div class="job-description">Restaurant & Retail - McAllen, Texas</div>
+            <ul class="job-bullets">
+                <li>Onboarded and trained new employees on company procedures, systems, and service standards</li>
+                <li>Managed POS system operations, inventory, and pricing with attention to accuracy</li>
+                <li>Fostered collaborative team environment through positive communication and recognition of employee contributions</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <span class="section-accent">What I Bring</span>
+        <h2>Skills & Competencies</h2>
+        <div class="section-divider"></div>
+
+        <div class="skills-grid">
+            <div class="skill-category">
+                <h3>HR & Organizational</h3>
+                <ul>
+                    <li>Team leadership & coordination</li>
+                    <li>Employee training & onboarding</li>
+                    <li>Workplace culture development</li>
+                    <li>Operations management</li>
+                </ul>
+            </div>
+            <div class="skill-category">
+                <h3>Technical & Systems</h3>
+                <ul>
+                    <li>Data analysis & VBA</li>
+                    <li>POS & inventory systems</li>
+                    <li>Excel & Tableau</li>
+                    <li>Basic programming & automation</li>
+                </ul>
+            </div>
+            <div class="skill-category">
+                <h3>Languages & Communication</h3>
+                <ul>
+                    <li>English (Native)</li>
+                    <li>Spanish (Fluent)</li>
+                    <li>Cross-cultural communication</li>
+                    <li>Professional writing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <span class="section-accent">What I've Built</span>
+        <h2>Projects</h2>
+        <div class="section-divider"></div>
+
+            <div class="project-card">
+                <a href="gamechoosescreen.html" style="text-decoration: none; color: inherit;">
+                <div class="project-icon">🐍 & 🏓</div>
+                <div class="project-title">Retro Games</div>
+                <div class="project-description">Built fully functional games (Snake & Pong) in HTML/CSS/JavaScript with multiple difficulty modes. Clean code, responsive design, and smooth mechanics. Great example of front-end development and user experience thinking.</div>
+                <div class="project-tech">
+                    <span class="tech-tag">HTML/CSS/JS</span>
+                    <span class="tech-tag">Game Design</span>
+                    <span class="tech-tag">Responsive</span>
+                </div>
+            </a>
+            </div>
+
+            <div class="projects-grid">
+            <div class="project-card">
+                <a href="WIP.html" style="text-decoration: none;">
+                <div class="project-icon">📖</div>
+                <div class="project-title">E-ink RSVP Reader</div>
+                <div class="project-description">Custom firmware adaptation of Pala One 2.0 for a 2.13" e-paper module. Implemented full RSVP word-flash mode at 300 WPM default with ESP32-S3 microcontroller. Showcases embedded systems thinking and hardware integration.</div>
+                <div class="project-tech">
+                    <span class="tech-tag">Embedded Systems</span>
+                    <span class="tech-tag">ESP32</span>
+                    <span class="tech-tag">E-Ink Display</span>
+                </div>
+            </a>
+            </div>
+
+            <div class="project-card empty-project">
+                <div>
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">➕</div>
+                    <p>More projects coming soon...</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-gray);">Space to showcase additional work</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education">
+        <span class="section-accent">Learning Path</span>
+        <h2>Education</h2>
+        <div class="section-divider"></div>
+
+        <div class="education-item">
+            <div class="education-school">Brigham Young University</div>
+            <div class="education-degree">Human Resources Management Major</div>
+            <div class="education-duration">April 2026 - 2030</div>
+        </div>
+
+        <div class="education-item">
+            <div class="education-school">Science Academy</div>
+            <div class="education-degree">High School Diploma</div>
+            <div class="education-duration">2019 - 2023 • Mercedes, Texas</div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <span class="section-accent">Let's Connect</span>
+        <h2>Get in Touch</h2>
+        <div class="section-divider"></div>
+
+        <div class="contact-info">
+            <div class="contact-method">
+                <div class="contact-icon">📧</div>
+                <div class="contact-label">Email</div>
+                <div class="contact-value"><a href="mailto:ethanrholbrook14@gmail.com">ethanrholbrook14@gmail.com</a></div>
+            </div>
+            <div class="contact-method">
+                <div class="contact-icon">📱</div>
+                <div class="contact-label">Phone</div>
+                <div class="contact-value"><a href="tel:+19563797019">(956) 379-7019</a></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Ethan Holbrook. All rights reserved.</p>
+        <p>Crafted with attention to detail and a passion for organization.</p>
+    </footer>
+</body>
+</html>
